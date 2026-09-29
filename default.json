@@ -9,6 +9,9 @@
     ":semanticCommitTypeAll(chore)"
   ],
   "timezone": "Europe/Amsterdam",
+  "schedule": [
+    "before 7am on monday"
+  ],
   "prConcurrentLimit": 5,
   "prHourlyLimit": 0,
   "rangeStrategy": "replace",
@@ -25,6 +28,9 @@
     ],
     "enabled": true,
     "commitMessageAction": "Refresh",
+    "schedule": [
+      "before 7am on monday"
+    ],
     "branchConcurrentLimit": 0,
     "prConcurrentLimit": 0,
     "automerge": true,
@@ -49,7 +55,10 @@
       ],
       "automerge": true,
       "automergeType": "pr",
-      "platformAutomerge": true
+      "platformAutomerge": true,
+      "schedule": [
+        "before 7am on monday"
+      ]
     },
     {
       "description": [
