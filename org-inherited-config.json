@@ -1,0 +1,7 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Org-wide inherited config for linked-fw. Mend applies this to every installed repository automatically, with no per-repo file. The policy itself lives in default.json in this repo -- this file only carries the two switches a preset is not permitted to set. Note: Mend only picks this file up when it detects a COMMIT to it, and only if the app was already installed on this repo at the time, so if it is not taking effect, push a commit here and wait a minute.",
+  "extends": ["local>linked-fw/renovate-config"],
+  "onboarding": false,
+  "requireConfig": "optional"
+}
