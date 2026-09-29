@@ -25,6 +25,8 @@
     ],
     "enabled": true,
     "commitMessageAction": "Refresh",
+    "branchConcurrentLimit": 0,
+    "prConcurrentLimit": 0,
     "automerge": true,
     "automergeType": "pr",
     "platformAutomerge": true
