@@ -27,10 +27,7 @@
     "commitMessageAction": "Refresh",
     "automerge": true,
     "automergeType": "pr",
-    "platformAutomerge": true,
-    "_disabledSchedule": [
-      "* 0-6 * * 1"
-    ]
+    "platformAutomerge": true
   },
   "packageRules": [
     {
@@ -50,10 +47,7 @@
       ],
       "automerge": true,
       "automergeType": "pr",
-      "platformAutomerge": true,
-      "_disabledSchedule": [
-        "* 0-6 * * 1"
-      ]
+      "platformAutomerge": true
     },
     {
       "description": [
@@ -136,9 +130,5 @@
     "labels": [
       "security"
     ]
-  },
-  "_disabledSchedule": [
-    "* 0-6 * * 1"
-  ],
-  "_scheduleNote": "TEMPORARY 2026-09-29: schedules parked under _disabledSchedule so Renovate runs on demand for a first live test. Restore by renaming both keys back to \"schedule\" and deleting this note."
+  }
 }
