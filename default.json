@@ -1,6 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "description": "Shared Renovate policy for every @_linked package repo in linked-fw. Edit here, not per repo: each repo's renovate.json is a three-line stub that extends this file.",
+  "description": [
+    "Shared Renovate policy for every @_linked package repo in linked-fw. Edit here, not per repo: each repo's renovate.json is a three-line stub that extends this file."
+  ],
   "extends": [
     "config:recommended",
     ":dependencyDashboard",
@@ -18,7 +20,9 @@
     "**/test/fixtures/**"
   ],
   "lockFileMaintenance": {
-    "description": "THE control this whole setup exists for. Six packages' lockfiles had pinned @_linked/core 2.6.0 under a ^2.0.1 range for months; npm ci installs the lock, not the range, so xsd published shape IRIs derived from a core nobody chose. Renovate's ordinary update flow opens NOTHING there, because 2.6.0 never escaped ^2.0.1. Only lockFileMaintenance regenerates a lock that is still inside its declared range. It is disabled by default -- 'Renovate is installed' does not mean this is covered.",
+    "description": [
+      "THE control this whole setup exists for. Six packages' lockfiles had pinned @_linked/core 2.6.0 under a ^2.0.1 range for months; npm ci installs the lock, not the range, so xsd published shape IRIs derived from a core nobody chose. Renovate's ordinary update flow opens NOTHING there, because 2.6.0 never escaped ^2.0.1. Only lockFileMaintenance regenerates a lock that is still inside its declared range. It is disabled by default -- 'Renovate is installed' does not mean this is covered."
+    ],
     "enabled": true,
     "commitMessageAction": "Refresh",
     "automerge": true,
@@ -30,7 +34,9 @@
   },
   "packageRules": [
     {
-      "description": "The fleet rule. Every @_linked/* dependency moves in ONE PR per repo, so no repo can sit on core 2.22.8 while its sibling sits on 2.6.0 -- three separate PRs merged at three different times IS the state the audit found. Automerged on green CI: an @_linked release PR exists only because someone deliberately cut that version, so a human is already upstream of it.",
+      "description": [
+        "The fleet rule. Every @_linked/* dependency moves in ONE PR per repo, so no repo can sit on core 2.22.8 while its sibling sits on 2.6.0 -- three separate PRs merged at three different times IS the state the audit found. Automerged on green CI: an @_linked release PR exists only because someone deliberately cut that version, so a human is already upstream of it."
+      ],
       "groupName": "linked framework",
       "groupSlug": "linked-fw",
       "matchPackageNames": [
@@ -45,12 +51,14 @@
       "automerge": true,
       "automergeType": "pr",
       "platformAutomerge": true,
-      "schedule": [
+      "_disabledSchedule": [
         "* 0-6 * * 1"
       ]
     },
     {
-      "description": "Peer-only @_linked deps belong in the same group and move by range replacement -- a peerDependency range that lags the dependency range is exactly how a consumer ends up resolving two cores.",
+      "description": [
+        "Peer-only @_linked deps belong in the same group and move by range replacement -- a peerDependency range that lags the dependency range is exactly how a consumer ends up resolving two cores."
+      ],
       "matchPackageNames": [
         "@_linked/**"
       ],
@@ -62,7 +70,9 @@
       "rangeStrategy": "replace"
     },
     {
-      "description": "React and its types move together or not at all; a split is how the JSX transform ends up mismatched between runtime and types. External, so held for review.",
+      "description": [
+        "React and its types move together or not at all; a split is how the JSX transform ends up mismatched between runtime and types. External, so held for review."
+      ],
       "groupName": "react",
       "matchPackageNames": [
         "react",
@@ -73,7 +83,9 @@
       "automerge": false
     },
     {
-      "description": "Third-party runtime and dev dependencies are never automerged. An @_linked bump has a deliberate human release behind it; a third party's release has nobody who reviewed it for this fleet. Held a week so a yanked version never reaches a lock.",
+      "description": [
+        "Third-party runtime and dev dependencies are never automerged. An @_linked bump has a deliberate human release behind it; a third party's release has nobody who reviewed it for this fleet. Held a week so a yanked version never reaches a lock."
+      ],
       "matchDepTypes": [
         "dependencies",
         "devDependencies",
@@ -86,7 +98,9 @@
       "automerge": false
     },
     {
-      "description": "GitHub Actions: grouped, never automerged. In .github a single bump propagates to every pipeline in the org at once, which is both the value and the risk.",
+      "description": [
+        "GitHub Actions: grouped, never automerged. In .github a single bump propagates to every pipeline in the org at once, which is both the value and the risk."
+      ],
       "matchManagers": [
         "github-actions"
       ],
@@ -94,7 +108,9 @@
       "automerge": false
     },
     {
-      "description": "Typescript alone, never grouped, never automerged. A TS minor is a compiler change and routinely breaks a build nothing else touched; when it does, the PR should say so by itself.",
+      "description": [
+        "Typescript alone, never grouped, never automerged. A TS minor is a compiler change and routinely breaks a build nothing else touched; when it does, the PR should say so by itself."
+      ],
       "matchPackageNames": [
         "typescript"
       ],
@@ -102,7 +118,9 @@
       "automerge": false
     },
     {
-      "description": "Majors are always solo and always human, @_linked included. Grouping majors is how one unrelated breaking change blocks nineteen safe ones -- and a core major can change emitted shape IRIs, which a green build does not catch because the build passes and only the OUTPUT is wrong.",
+      "description": [
+        "Majors are always solo and always human, @_linked included. Grouping majors is how one unrelated breaking change blocks nineteen safe ones -- and a core major can change emitted shape IRIs, which a green build does not catch because the build passes and only the OUTPUT is wrong."
+      ],
       "matchUpdateTypes": [
         "major"
       ],
@@ -112,7 +130,9 @@
     }
   ],
   "vulnerabilityAlerts": {
-    "description": "Security fixes escape both the group and the weekly schedule. Renovate ignores `schedule` here regardless; the label is the only thing this block really adds.",
+    "description": [
+      "Security fixes escape both the group and the weekly schedule. Renovate ignores `schedule` here regardless; the label is the only thing this block really adds."
+    ],
     "labels": [
       "security"
     ]
