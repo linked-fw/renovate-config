@@ -9,6 +9,7 @@
     ":semanticCommitTypeAll(chore)"
   ],
   "timezone": "Europe/Amsterdam",
+  "schedule": ["* 0-6 * * 1"],
   "prConcurrentLimit": 5,
   "prHourlyLimit": 0,
   "rangeStrategy": "replace",
@@ -24,6 +25,7 @@
       "THE control this whole setup exists for. Six packages' lockfiles had pinned @_linked/core 2.6.0 under a ^2.0.1 range for months; npm ci installs the lock, not the range, so xsd published shape IRIs derived from a core nobody chose. Renovate's ordinary update flow opens NOTHING there, because 2.6.0 never escaped ^2.0.1. Only lockFileMaintenance regenerates a lock that is still inside its declared range. It is disabled by default -- 'Renovate is installed' does not mean this is covered."
     ],
     "enabled": true,
+    "schedule": ["* 0-6 * * 1"],
     "commitMessageAction": "Refresh",
     "branchConcurrentLimit": 0,
     "prConcurrentLimit": 0,
@@ -49,7 +51,8 @@
       ],
       "automerge": true,
       "automergeType": "pr",
-      "platformAutomerge": true
+      "platformAutomerge": true,
+      "schedule": ["* 0-6 * * 1"]
     },
     {
       "description": [
