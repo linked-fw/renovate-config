@@ -1,7 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "description": [
-    "Shared Renovate policy for every @_linked package repo in linked-fw. Edit here, not per repo: each repo's renovate.json is a three-line stub that extends this file."
+    "Shared Renovate policy for every @_linked package repo in linked-fw. Edit here, not per repo: each repo's renovate.json is a three-line stub that extends this file.",
+    "statusCheckWhen.artifactError is \"always\" on purpose. Renovate's default is \"failed\": the renovate/artifacts check is created ONLY when the post-update step (running npm to regenerate package-lock.json after editing package.json) fails, and a successful run leaves no check at all. That silence is what got misread -- a PR with a package.json change and no lockfile change looked like a broken dependency, when it was npm refusing an ERESOLVE. With \"always\" every Renovate PR states green or red, so the absence of a lockfile change can be attributed immediately. Note the check is (re)set only on a run that commits to the branch, so PRs opened before this change keep their current state until Renovate next pushes to them."
   ],
   "extends": [
     "config:recommended",
@@ -13,6 +14,12 @@
   "prConcurrentLimit": 5,
   "prHourlyLimit": 0,
   "rangeStrategy": "replace",
+  "statusCheckWhen": {
+    "artifactError": "always"
+  },
+  "userStrings": {
+    "artifactErrorWarning": "Renovate could not regenerate this repository's `package-lock.json` for this update, so the branch carries a `package.json` change with NO matching lockfile change -- that, and only that, is what a red `renovate/artifacts` check means. CI will then fail `npm ci` with `EUSAGE` (\"lock file does not satisfy package.json\"); that failure is NOT the new dependency breaking the code, it is the missing lockfile. Read the npm output below before anything else: if it says `ERESOLVE`, npm is correctly refusing a real peer-dependency conflict in this repo, and the fix is to resolve that conflict (or close the PR) -- never to hand-edit the lockfile."
+  },
   "postUpdateOptions": [
     "npmDedupe"
   ],
