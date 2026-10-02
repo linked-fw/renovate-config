@@ -162,12 +162,75 @@
       "groupName": "sentry",
       "groupSlug": "sentry",
       "enabled": false
+    },
+    {
+      "description": [
+        "linked-fw/cli react-native template: react-native, @react-native/*, react, react-dom and @types/react are disabled there, ALL update types. Expo pins React Native exactly per SDK (SDK 57 -> 0.86.3, SDK 58 -> 0.88) and no Expo SDK will ever support 0.87, so a standalone bump breaks `linked create-app --template react-native` -- cli#183 (react-native 0.87.1) and cli#167 (@react-native/jest-preset 0.87.1) both did, and CI was green only because the full template test does not run there. These move only as part of an Expo SDK upgrade, done by hand with `npx expo install --fix`: https://github.com/linked-fw/cli/blob/main/docs/backlog/008-template-expo-pins-react-native.md"
+      ],
+      "matchRepositories": [
+        "linked-fw/cli"
+      ],
+      "matchFileNames": [
+        "defaults/app-react-native/**"
+      ],
+      "matchPackageNames": [
+        "react-native",
+        "@react-native/**",
+        "react",
+        "react-dom",
+        "@types/react"
+      ],
+      "enabled": false
+    },
+    {
+      "description": [
+        "Same template: the Expo SDK packages move as one group, and their majors (a new SDK) are disabled, because a new SDK also moves react-native and react, which the rule above holds. Patch releases within the current SDK still arrive, together, for review. https://github.com/linked-fw/cli/blob/main/docs/backlog/008-template-expo-pins-react-native.md"
+      ],
+      "matchRepositories": [
+        "linked-fw/cli"
+      ],
+      "matchFileNames": [
+        "defaults/app-react-native/**"
+      ],
+      "matchPackageNames": [
+        "expo",
+        "expo-*",
+        "@expo/**",
+        "jest-expo",
+        "eslint-config-expo"
+      ],
+      "groupName": "expo sdk",
+      "groupSlug": "expo-sdk"
+    },
+    {
+      "description": [
+        "The SDK major itself is the manual `npx expo install --fix` upgrade described in the backlog note above, never a Renovate PR."
+      ],
+      "matchRepositories": [
+        "linked-fw/cli"
+      ],
+      "matchFileNames": [
+        "defaults/app-react-native/**"
+      ],
+      "matchPackageNames": [
+        "expo",
+        "expo-*",
+        "@expo/**",
+        "jest-expo",
+        "eslint-config-expo"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "enabled": false
     }
   ],
   "vulnerabilityAlerts": {
     "description": [
-      "Security fixes escape both the group and the weekly schedule. Renovate ignores `schedule` here regardless; the label is the only thing this block really adds."
+      "Security fixes escape both the group and the weekly schedule. Renovate ignores `schedule` here regardless.",
+      "`enabled: true` is load-bearing, not a default restated. Renovate turns each alert into a packageRule appended AFTER the ones above, carrying this object as `force` (lib/workers/repository/init/vulnerability.ts; the same for osvVulnerabilityAlerts in process/vulnerabilities.ts). A forced `enabled: true` clears the skip that an `enabled: false` packageRule set (lib/util/package-rules/index.ts), so the held packages above -- Capacitor/Tolgee majors, Sentry in linked-fw/sentry, React Native in the cli template -- still get a fix PR. Without it, the built-in default has no `enabled` key, the alert rule forces nothing, and the hold silently swallows the fix too."
     ],
+    "enabled": true,
     "labels": [
       "security"
     ]
