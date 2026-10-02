@@ -133,12 +133,104 @@
       "groupName": null,
       "automerge": false,
       "minimumReleaseAge": "7 days"
+    },
+    {
+      "description": [
+        "Deferred majors: we decided not to upgrade Capacitor or Tolgee for now. Placed after the generic majors rule on purpose, so it overrides it. It stops Renovate re-raising the same major every Monday; minors and patches still flow. Each held update has a backlog note saying what breaks and what to check when it is picked up -- and in most cases the better outcome is to remove the dependency rather than upgrade it: https://github.com/linked-fw/auth/blob/main/docs/backlog/001-capacitor-dialog-8.md (replaces auth#47), https://github.com/linked-fw/auth/blob/main/docs/backlog/002-tolgee-react-7.md (replaces auth#55), https://github.com/linked-fw/server-utils/blob/main/docs/backlog/002-capacitor-core-8.md (replaces server-utils#57), https://github.com/linked-fw/shape-ui/blob/main/docs/backlog/001-capacitor-core-8.md (replaces shape-ui#36).",
+        "Lift it per package as each note is resolved; a dependency that is removed simply stops matching."
+      ],
+      "matchPackageNames": [
+        "@capacitor/**",
+        "@tolgee/**"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "enabled": false
+    },
+    {
+      "description": [
+        "Sentry is held as a unit in linked-fw/sentry, ALL update types. @sentry/capacitor exact-pins every @sentry/* sibling and its postinstall (check-siblings) exits 1 on any other version, so no single-package Sentry PR can install there: sentry#27 (8.55.2) is unreachable under capacitor 1.x, and sentry#34 (capacitor 4) is an ERESOLVE against the pinned @sentry/react 8. All four are pinned exact, so disabling only non-patch updates would still let the #27-style patch PRs reopen. The way out is one deliberate PR moving capacitor, react, node and profiling-node together, after the Session Replay decision (Create Now backlog 051): https://github.com/linked-fw/sentry/blob/main/docs/backlog/001-sentry-capacitor-and-js-sdk-upgrade.md",
+        "Not a Capacitor coupling: every @sentry/capacitor major through 4 peers on @capacitor/core >=3.0.0, so this is independent of the Capacitor hold above. The group is kept so that deleting `enabled: false` alone yields the one combined PR this needs."
+      ],
+      "matchRepositories": [
+        "linked-fw/sentry"
+      ],
+      "matchPackageNames": [
+        "@sentry/**"
+      ],
+      "groupName": "sentry",
+      "groupSlug": "sentry",
+      "enabled": false
+    },
+    {
+      "description": [
+        "linked-fw/cli react-native template: react-native, @react-native/*, react, react-dom and @types/react are disabled there, ALL update types. Expo pins React Native exactly per SDK (SDK 57 -> 0.86.3, SDK 58 -> 0.88) and no Expo SDK will ever support 0.87, so a standalone bump breaks `linked create-app --template react-native` -- cli#183 (react-native 0.87.1) and cli#167 (@react-native/jest-preset 0.87.1) both did, and CI was green only because the full template test does not run there. These move only as part of an Expo SDK upgrade, done by hand with `npx expo install --fix`: https://github.com/linked-fw/cli/blob/main/docs/backlog/008-template-expo-pins-react-native.md"
+      ],
+      "matchRepositories": [
+        "linked-fw/cli"
+      ],
+      "matchFileNames": [
+        "defaults/app-react-native/**"
+      ],
+      "matchPackageNames": [
+        "react-native",
+        "@react-native/**",
+        "react",
+        "react-dom",
+        "@types/react"
+      ],
+      "enabled": false
+    },
+    {
+      "description": [
+        "Same template: the Expo SDK packages move as one group, and their majors (a new SDK) are disabled, because a new SDK also moves react-native and react, which the rule above holds. Patch releases within the current SDK still arrive, together, for review. https://github.com/linked-fw/cli/blob/main/docs/backlog/008-template-expo-pins-react-native.md"
+      ],
+      "matchRepositories": [
+        "linked-fw/cli"
+      ],
+      "matchFileNames": [
+        "defaults/app-react-native/**"
+      ],
+      "matchPackageNames": [
+        "expo",
+        "expo-*",
+        "@expo/**",
+        "jest-expo",
+        "eslint-config-expo"
+      ],
+      "groupName": "expo sdk",
+      "groupSlug": "expo-sdk"
+    },
+    {
+      "description": [
+        "The SDK major itself is the manual `npx expo install --fix` upgrade described in the backlog note above, never a Renovate PR."
+      ],
+      "matchRepositories": [
+        "linked-fw/cli"
+      ],
+      "matchFileNames": [
+        "defaults/app-react-native/**"
+      ],
+      "matchPackageNames": [
+        "expo",
+        "expo-*",
+        "@expo/**",
+        "jest-expo",
+        "eslint-config-expo"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "enabled": false
     }
   ],
   "vulnerabilityAlerts": {
     "description": [
-      "Security fixes escape both the group and the weekly schedule. Renovate ignores `schedule` here regardless; the label is the only thing this block really adds."
+      "Security fixes escape both the group and the weekly schedule. Renovate ignores `schedule` here regardless.",
+      "`enabled: true` is load-bearing, not a default restated. Renovate turns each alert into a packageRule appended AFTER the ones above, carrying this object as `force` (lib/workers/repository/init/vulnerability.ts; the same for osvVulnerabilityAlerts in process/vulnerabilities.ts). A forced `enabled: true` clears the skip that an `enabled: false` packageRule set (lib/util/package-rules/index.ts), so the held packages above -- Capacitor/Tolgee majors, Sentry in linked-fw/sentry, React Native in the cli template -- still get a fix PR. Without it, the built-in default has no `enabled` key, the alert rule forces nothing, and the hold silently swallows the fix too."
     ],
+    "enabled": true,
     "labels": [
       "security"
     ]
