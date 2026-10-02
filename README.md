@@ -43,6 +43,7 @@ that catches it is **`lockFileMaintenance`**, which regenerates the lock within 
 | **Never grouped** | Majors (one breaking change must not block nineteen safe ones), `typescript` (a minor is a compiler change), security fixes. |
 | **Automerged** | `@_linked/*` non-major on green CI, and `lockFileMaintenance`. |
 | **Held for review** | Every external dependency, every major, `typescript`, GitHub Actions. |
+| **Disabled (deferred)** | Majors of `@capacitor/**` and `@tolgee/**` everywhere (we decided not to upgrade Capacitor or Tolgee for now), and every `@sentry/**` update in `linked-fw/sentry` (exact-pinned siblings that can only move in one PR). Each points at a backlog note in the affected repo; lift the rule when the note is resolved. |
 
 The automerge split is the one asymmetry worth stating plainly: an `@_linked/*` update PR exists
 *because someone deliberately released that version*, so a human is already upstream of it. An
