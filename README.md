@@ -83,9 +83,20 @@ meant to prevent it.
 
 Measured today, both sides resolve strictly: the shared `pr.yml` runs a plain `npm ci`, no caller
 passes `--legacy-peer-deps`, and no repo commits an `.npmrc`. So the alignment is structural and
-needs no config. **If `--legacy-peer-deps` ever comes back to `pr.yml`, add `npmrc` +
-`npmrcMerge: true` here in the same commit**, or Renovate will start opening PRs whose locks it
-silently failed to regenerate.
+needs no peer config. **If `--legacy-peer-deps` ever comes back to `pr.yml`, add
+`legacy-peer-deps=true` to the `npmrc` string here in the same commit**, or Renovate will start
+opening PRs whose locks it silently failed to regenerate.
+
+## Remote tarballs (npm 12)
+
+`default.json` sets `npmrc: "allow-remote=all"` with `npmrcMerge: true`. npm 12 defaults
+`allow-remote` to `none`, and during Renovate's `--package-lock-only` step arborist then refuses
+the registry tarball of a `bundleDependencies` package with `EALLOWREMOTE`
+(`@tailwindcss/oxide-wasm32-wasi`, primitives#65). The result was a red `renovate/artifacts` and a
+PR without its lockfile. `npmrcMerge: true` matters: with the default `false`, a config `npmrc`
+*replaces* any repo `.npmrc`, so a repo that later adds one would have it silently ignored by
+Renovate. With merging on, this line is prepended and a repo `.npmrc` still wins. Registry auth
+from `hostRules` is appended separately and is unaffected.
 
 ## Background
 
