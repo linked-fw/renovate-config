@@ -44,6 +44,7 @@ that catches it is **`lockFileMaintenance`**, which regenerates the lock within 
 | **Automerged** | `@_linked/*` non-major on green CI, and `lockFileMaintenance`. |
 | **Held for review** | Every external dependency, every major, `typescript`, GitHub Actions. |
 | **Disabled (deferred)** | Majors of `@capacitor/**` and `@tolgee/**` everywhere (we decided not to upgrade Capacitor or Tolgee for now), every `@sentry/**` update in `linked-fw/sentry` (exact-pinned siblings that can only move in one PR), and `react-native`/`@react-native/*`/`react`/`react-dom`/`@types/react` plus Expo SDK majors in `linked-fw/cli`'s `defaults/app-react-native/` (Expo pins React Native). Each points at a backlog note in the affected repo; lift the rule when the note is resolved. **Security fixes still come through** for all of them: `vulnerabilityAlerts.enabled: true` is forced onto every alert rule, which overrides an `enabled: false` packageRule. |
+| **Awaiting dashboard approval** | Majors of `typescript` (7), `express` and `@types/express` (5). These are planned migrations, so no PR is opened, but each update stays listed under "Pending Approval" on the repo's Dependency Dashboard issue. Tick it there to create the PR when the migration starts. This is `dependencyDashboardApproval: true`, not `enabled: false`, so the update is never silently dropped. |
 
 The automerge split is the one asymmetry worth stating plainly: an `@_linked/*` update PR exists
 *because someone deliberately released that version*, so a human is already upstream of it. An

@@ -153,6 +153,21 @@
     },
     {
       "description": [
+        "Planned majors: TypeScript 7 and Express 5 are migrations we intend to do, as one coordinated rollout each, not as per-repo Renovate merges. Their PRs could not pass on their own: TypeScript 7 broke the lockfile step (core#303: the lock's typescript@5.9.3 does not satisfy typescript@7.0.2) and the build (dcat#35: TS2344 in @_linked/core's published SelectQuery.d.ts); Express 5 broke auth's tests (auth#73: app.lazyrouter is not a function) and server's routes (server#142: path-to-regexp rejects /resized/*). The stack is on Express 4 on purpose (Create Now backlog 047). Create Now backlog 103 (TypeScript 7) and 102 (Express 5) hold the plans.",
+        "Not `enabled: false` like the Capacitor/Tolgee rule above, on purpose: dependencyDashboardApproval stops Renovate opening the PR but keeps the update listed on each repo's Dependency Dashboard issue under 'Pending Approval', so the migration stays visible. Ticking its checkbox there creates the PR in that repo when the migration starts. Placed after the generic majors rule so it overrides it. Lift it when the migration is done."
+      ],
+      "matchPackageNames": [
+        "typescript",
+        "express",
+        "@types/express"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "dependencyDashboardApproval": true
+    },
+    {
+      "description": [
         "Sentry is held as a unit in linked-fw/sentry, ALL update types. @sentry/capacitor exact-pins every @sentry/* sibling and its postinstall (check-siblings) exits 1 on any other version, so no single-package Sentry PR can install there: sentry#27 (8.55.2) is unreachable under capacitor 1.x, and sentry#34 (capacitor 4) is an ERESOLVE against the pinned @sentry/react 8. All four are pinned exact, so disabling only non-patch updates would still let the #27-style patch PRs reopen. The way out is one deliberate PR moving capacitor, react, node and profiling-node together, after the Session Replay decision (Create Now backlog 051): https://github.com/linked-fw/sentry/blob/main/docs/backlog/001-sentry-capacitor-and-js-sdk-upgrade.md",
         "Not a Capacitor coupling: every @sentry/capacitor major through 4 peers on @capacitor/core >=3.0.0, so this is independent of the Capacitor hold above. The group is kept so that deleting `enabled: false` alone yields the one combined PR this needs."
       ],
